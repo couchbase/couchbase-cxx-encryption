@@ -6,16 +6,19 @@
  * v7 which may be found at https://www.couchbase.com/ESLA01162020.
  */
 
-#pragma once
+#include "test_data.hxx"
 
+#include <spdlog/fmt/bundled/format.h>
+
+#include <chrono>
 #include <string>
-#include <vector>
 
 namespace test::utils
 {
-[[nodiscard]] auto
-to_string(const std::vector<std::byte>& input) -> std::string;
+auto
+uniq_id(const std::string& prefix) -> std::string
+{
+  return fmt::format("{}_{}", prefix, std::chrono::steady_clock::now().time_since_epoch().count());
+}
 
-[[nodiscard]] auto
-make_bytes(std::vector<unsigned char> v) -> std::vector<std::byte>;
 } // namespace test::utils

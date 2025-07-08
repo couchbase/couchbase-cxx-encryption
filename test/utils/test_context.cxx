@@ -1,18 +1,9 @@
 /* -*- Mode: C++; tab-width: 4; c-basic-offset: 4; indent-tabs-mode: nil -*- */
 /*
- *   Copyright 2020-2021 Couchbase, Inc.
+ * Copyright (c) 2025 Couchbase, Inc.
  *
- *   Licensed under the Apache License, Version 2.0 (the "License");
- *   you may not use this file except in compliance with the License.
- *   You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *   Unless required by applicable law or agreed to in writing, software
- *   distributed under the License is distributed on an "AS IS" BASIS,
- *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *   See the License for the specific language governing permissions and
- *   limitations under the License.
+ * Use of this software is subject to the Couchbase Inc. Enterprise Subscription License Agreement
+ * v7 which may be found at https://www.couchbase.com/ESLA01162020.
  */
 
 #include "test_context.hxx"
@@ -69,8 +60,6 @@ test_context::load_from_environment() -> test_context
       ctx.deployment = deployment_type::on_prem;
     } else if (var == "capella") {
       ctx.deployment = deployment_type::capella;
-    } else if (var == "elixir") {
-      ctx.deployment = deployment_type::elixir;
     }
   }
 
@@ -106,9 +95,8 @@ test_context::load_from_environment() -> test_context
     }
   }
 
-  // Always use WAN profile for Capella or Elixir setups
-  if (ctx.deployment == deployment_type::capella ||
-      ctx.deployment == test::utils::deployment_type::elixir) {
+  // Always use WAN profile for Capella
+  if (ctx.deployment == deployment_type::capella) {
     ctx.use_wan_development_profile = true;
   }
 
@@ -129,7 +117,7 @@ test_context::build_options() const -> couchbase::cluster_options
     };
   }() };
 
-  if (deployment == deployment_type::capella || deployment == deployment_type::elixir) {
+  if (use_wan_development_profile) {
     options.apply_profile("wan_development");
   }
   if (dns_nameserver.has_value() && dns_port.has_value()) {

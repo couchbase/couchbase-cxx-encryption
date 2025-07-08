@@ -1,20 +1,10 @@
 /* -*- Mode: C++; tab-width: 4; c-basic-offset: 4; indent-tabs-mode: nil -*- */
 /*
- *   Copyright 2020-2021 Couchbase, Inc.
+ * Copyright (c) 2025 Couchbase, Inc.
  *
- *   Licensed under the Apache License, Version 2.0 (the "License");
- *   you may not use this file except in compliance with the License.
- *   You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *   Unless required by applicable law or agreed to in writing, software
- *   distributed under the License is distributed on an "AS IS" BASIS,
- *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *   See the License for the specific language governing permissions and
- *   limitations under the License.
+ * Use of this software is subject to the Couchbase Inc. Enterprise Subscription License Agreement
+ * v7 which may be found at https://www.couchbase.com/ESLA01162020.
  */
-
 #include "server_version.hxx"
 
 #include <regex>
@@ -52,5 +42,16 @@ server_version::parse(const std::string& str, const deployment_type deployment) 
     ver.micro = 0;
   }
   return ver;
+}
+
+auto
+server_version::supports_feature(const server_feature feature) const -> bool
+{
+  switch (feature) {
+    case server_feature::range_scan:
+      return major > 7 || (major == 7 && minor >= 6);
+    default:
+      throw std::invalid_argument("Not known which version supports this feature");
+  }
 }
 } // namespace test::utils

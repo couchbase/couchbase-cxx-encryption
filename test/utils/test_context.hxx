@@ -1,20 +1,10 @@
 /* -*- Mode: C++; tab-width: 4; c-basic-offset: 4; indent-tabs-mode: nil -*- */
 /*
- *   Copyright 2020-2021 Couchbase, Inc.
+ * Copyright (c) 2025 Couchbase, Inc.
  *
- *   Licensed under the Apache License, Version 2.0 (the "License");
- *   you may not use this file except in compliance with the License.
- *   You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *   Unless required by applicable law or agreed to in writing, software
- *   distributed under the License is distributed on an "AS IS" BASIS,
- *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *   See the License for the specific language governing permissions and
- *   limitations under the License.
+ * Use of this software is subject to the Couchbase Inc. Enterprise Subscription License Agreement
+ * v7 which may be found at https://www.couchbase.com/ESLA01162020.
  */
-
 #pragma once
 
 #include "server_version.hxx"
@@ -34,7 +24,6 @@ struct test_context {
   std::string bucket{ "default" };
   server_version version{ 6, 6, 0 };
   deployment_type deployment{ deployment_type::on_prem };
-  server_config_profile profile{ server_config_profile::unknown };
   std::optional<std::string> dns_nameserver{};
   std::optional<std::uint16_t> dns_port{};
   std::size_t number_of_io_threads{ 1 };

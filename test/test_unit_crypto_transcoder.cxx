@@ -1,21 +1,14 @@
 /* -*- Mode: C++; tab-width: 4; c-basic-offset: 4; indent-tabs-mode: nil -*- */
 /*
- *   Copyright 2025. Couchbase, Inc.
+ * Copyright (c) 2025 Couchbase, Inc.
  *
- *   Licensed under the Apache License, Version 2.0 (the "License");
- *   you may not use this file except in compliance with the License.
- *   You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *   Unless required by applicable law or agreed to in writing, software
- *   distributed under the License is distributed on an "AS IS" BASIS,
- *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *   See the License for the specific language governing permissions and
- *   limitations under the License.
+ * Use of this software is subject to the Couchbase Inc. Enterprise Subscription License Agreement
+ * v7 which may be found at https://www.couchbase.com/ESLA01162020.
  */
 
+#include "document_types/person.hxx"
 #include "test_helper.hxx"
+#include "utils/crypto.hxx"
 
 #include <couchbase/codec/tao_json_serializer.hxx>
 #include <couchbase_encryption/aead_aes_256_cbc_hmac_sha512_provider.hxx>
@@ -77,6 +70,7 @@ make_crypto_manager() -> std::shared_ptr<couchbase::crypto::default_manager>
 
   auto manager = std::make_shared<couchbase::crypto::default_manager>();
   manager->register_default_encrypter(provider.encrypter_for_key("test-key"));
+  manager->register_encrypter("one", provider.encrypter_for_key("test-key"));
   manager->register_decrypter(provider.decrypter());
 
   return manager;
@@ -304,4 +298,62 @@ TEST_CASE("unit: crypto transcoder with document that has encrypter alias that c
   } catch (const std::system_error& e) {
     REQUIRE(e.code() == couchbase::errc::field_level_encryption::encrypter_not_found);
   }
+}
+
+TEST_CASE("unit: crypto transcoder with document that has nested encrypted fields", "[unit]")
+{
+  const auto crypto_manager = make_crypto_manager();
+  const person p{
+    "Albert",
+    "Einstein",
+    "password123",
+    {
+      "1A",
+      {
+        "my street",
+        "my second line",
+      },
+    },
+    {
+      "cat",
+      std::map<std::string, person::pet::attribute>{
+        { "attr1", { "jump" } },
+        { "attr2", { "scratch", "extra" } },
+      },
+    },
+  };
+
+  const auto encoded = couchbase::crypto::default_transcoder::encode(p, crypto_manager);
+  REQUIRE(encoded.flags == couchbase::codec::codec_flags::json_common_flags);
+
+  auto json = couchbase::codec::tao_json_serializer::deserialize<tao::json::value>(encoded.data);
+  test::utils::ensure_field_is_encrypted(json, "password");
+  test::utils::ensure_field_is_encrypted(json, "address");
+  test::utils::ensure_field_at_path_is_encrypted(json, { "pet", "attributes" });
+
+  {
+    std::map<std::string, std::string> encrypted_address;
+    for (const auto& [node_k, node_v] : json.at("encrypted$address").get_object()) {
+      encrypted_address[node_k] = node_v.get_string();
+    }
+    const auto [err, address_bytes] = crypto_manager->decrypt(encrypted_address);
+    REQUIRE_NO_ERROR(err);
+    const auto address_json =
+      couchbase::codec::tao_json_serializer::deserialize<tao::json::value>(address_bytes);
+    test::utils::ensure_field_is_encrypted(address_json, "street");
+
+    {
+      std::map<std::string, std::string> encrypted_street;
+      for (const auto& [node_k, node_v] : address_json.at("encrypted$street").get_object()) {
+        encrypted_street[node_k] = node_v.get_string();
+      }
+      const auto [err, street_bytes] = crypto_manager->decrypt(encrypted_street);
+      REQUIRE_NO_ERROR(err);
+      const auto street_json =
+        couchbase::codec::tao_json_serializer::deserialize<tao::json::value>(street_bytes);
+      test::utils::ensure_field_is_encrypted(street_json, "second");
+    }
+  }
+
+  REQUIRE(p == couchbase::crypto::default_transcoder::decode<person>(encoded, crypto_manager));
 }
