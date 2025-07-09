@@ -32,15 +32,18 @@ template<typename Serializer>
 class transcoder
 {
 public:
-  static auto encode(const document& doc, const std::shared_ptr<manager>& crypto_manager)
-    -> codec::encoded_value
+  template<typename DocumentType>
+  static auto encode(const document<DocumentType>& document,
+                     const std::shared_ptr<manager>& crypto_manager) -> codec::encoded_value
   {
     if (crypto_manager == nullptr) {
       throw std::system_error(errc::field_level_encryption::generic_cryptography_failure,
                               "crypto manager is not set, cannot use transcoder with FLE");
     }
+    auto data = Serializer::serialize(document.content());
+
     auto [err, encrypted_data] =
-      internal::encrypt(doc.raw(), doc.encrypted_fields(), crypto_manager);
+      internal::encrypt(data, document.encrypted_fields(), crypto_manager);
     if (err) {
       throw std::system_error(err.ec(), "Failed to encrypt document: " + err.message());
     }
@@ -60,6 +63,7 @@ public:
     static const std::vector<encrypted_field> no_fields_to_encrypt{};
     constexpr const std::vector<encrypted_field>& encrypted_fields =
       has_encrypted_fields_v<Document> ? Document::encrypted_fields : no_fields_to_encrypt;
+
     auto [err, encrypted_data] = internal::encrypt(data, encrypted_fields, crypto_manager);
     if (err) {
       throw std::system_error(err.ec(), "Failed to encrypt document: " + err.message());

@@ -82,8 +82,7 @@ TEST_CASE("unit: crypto transcoder", "[unit]")
 
   const doc d{ "The enemy knows the system." };
 
-  static_assert(couchbase::crypto::has_encrypted_fields_v<doc>,
-                "profile should have encrypted_fields");
+  static_assert(couchbase::crypto::has_encrypted_fields_v<doc>, "doc should have encrypted_fields");
 
   SECTION("encoding")
   {

@@ -27,7 +27,6 @@ set(couchbase_cxx_encryption_FILES
         couchbase_encryption/impl/utils/json.cxx
         couchbase_encryption/impl/aead_aes_256_cbc_hmac_sha512_provider.cxx
         couchbase_encryption/impl/default_manager.cxx
-        couchbase_encryption/impl/document.cxx
         couchbase_encryption/impl/encryption_result.cxx
         couchbase_encryption/impl/insecure_keyring.cxx
         couchbase_encryption/impl/key.cxx

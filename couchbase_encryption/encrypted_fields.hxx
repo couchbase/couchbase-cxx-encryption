@@ -17,6 +17,11 @@ namespace couchbase::crypto
 struct encrypted_field {
   std::vector<std::string> field_path;
   std::optional<std::string> encrypter_alias{};
+
+  auto operator==(const encrypted_field& other) const -> bool
+  {
+    return field_path == other.field_path && encrypter_alias == other.encrypter_alias;
+  }
 };
 
 template<typename Document, typename = void>
