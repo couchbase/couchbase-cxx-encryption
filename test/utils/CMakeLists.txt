@@ -11,17 +11,16 @@ add_library(
 set_target_properties(test_utils PROPERTIES POSITION_INDEPENDENT_CODE ON)
 target_link_libraries(
         test_utils
-        PRIVATE project_options
-        project_warnings
+        PRIVATE
+        couchbase_cxx_encryption
+        ${CXX_SDK_TARGET}
         Microsoft.GSL::GSL
         taocpp::json
         spdlog::spdlog
         Catch2::Catch2WithMain
 )
 target_include_directories(test_utils PRIVATE
-        ${PROJECT_SOURCE_DIR}
-        ${PROJECT_BINARY_DIR}/generated
-        ${PROJECT_SOURCE_DIR}/couchbase-cxx-client)
+        ${PROJECT_SOURCE_DIR})
 target_include_directories(test_utils PRIVATE ${PROJECT_BINARY_DIR}/generated)
 
 if(MSVC)

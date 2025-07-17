@@ -3,7 +3,7 @@ if(NOT TARGET Catch2::Catch2WithMain)
             NAME
             catch2
             VERSION
-            3.4.0
+            3.8.1
             GITHUB_REPOSITORY
             "catchorg/catch2")
 endif()
@@ -29,8 +29,6 @@ macro(integration_test name)
             ${PROJECT_BINARY_DIR}/generated_$<CONFIG>)
     target_link_libraries(
             test_integration_${name}
-            project_options
-            project_warnings
             couchbase_cxx_encryption
             ${CXX_SDK_TARGET}
             Catch2::Catch2WithMain
