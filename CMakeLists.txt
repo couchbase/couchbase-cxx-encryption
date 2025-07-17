@@ -1,9 +1,12 @@
 cmake_minimum_required(VERSION 3.19)
 message(STATUS "CMake version ${CMAKE_VERSION}")
 
-include(cmake/CPM.cmake)
-
 cmake_policy(SET CMP0074 NEW)
+
+set(couchbase_cxx_encryption_BUILD_NUMBER 1)
+if(DEFINED ENV{BUILD_NUMBER})
+    set(couchbase_cxx_encryption_BUILD_NUMBER $ENV{BUILD_NUMBER})
+endif()
 
 project(
   couchbase_cxx_encryption
@@ -11,6 +14,8 @@ project(
   LANGUAGES CXX C)
 
 set(CMAKE_CXX_STANDARD 17)
+
+include(cmake/VersionInfo.cmake)
 
 set(couchbase_cxx_encryption_FILES
         couchbase_encryption/impl/utils/base64.cc
@@ -32,6 +37,8 @@ if (couchbase_cxx_client_FOUND)
     find_package(taocpp-json REQUIRED)
     find_package(spdlog REQUIRED)
 else()
+    include(cmake/CPM.cmake)
+
     cpmaddpackage(
             NAME
             couchbase_cxx_client
@@ -50,8 +57,10 @@ endif()
 set(CXX_SDK_TARGET couchbase_cxx_client::couchbase_cxx_client)
 
 target_include_directories(couchbase_cxx_encryption
-        PRIVATE SYSTEM
+        PUBLIC
         ${PROJECT_SOURCE_DIR}
+        ${PROJECT_BINARY_DIR}/generated
+        PRIVATE
         ${couchbase_cxx_client_SOURCE_DIR}
 )
 
