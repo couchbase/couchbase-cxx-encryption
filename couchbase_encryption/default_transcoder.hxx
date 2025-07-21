@@ -11,9 +11,9 @@
 #include <couchbase/codec/transcoder_traits.hxx>
 #include <couchbase_encryption/transcoder.hxx>
 
-#ifndef COUCHBASE_CXX_ENCRYPTION_DOXYGEN
 namespace couchbase
 {
+#ifndef COUCHBASE_CXX_ENCRYPTION_DOXYGEN
 namespace codec
 {
 class tao_json_serializer;
