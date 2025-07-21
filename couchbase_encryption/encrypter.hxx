@@ -16,6 +16,13 @@
 
 namespace couchbase::crypto
 {
+/**
+ * An encrypter is responsible for performing encryption for a specific algorithm and
+ * encryption key.
+ *
+ * @since 1.0.0
+ * @commmitted
+ */
 class encrypter
 {
 public:
@@ -26,6 +33,19 @@ public:
   auto operator=(encrypter&& other) -> encrypter& = default;
   virtual ~encrypter() = default;
 
+  /**
+   * Encrypts the given message.
+   *
+   * The encryption result specifies the algorithm of the decrypter, to use when reading this
+   * encrypted field. The result also includes any attributes required for decryption, such as
+   * the ID of the secret key, or other parameters specific to the algorithm.
+   *
+   * @param plaintext the bytes to encrypt
+   * @return the encryption result, or an error if encryption failed
+   *
+   * @since 1.0.0
+   * @committed
+   */
   virtual auto encrypt(std::vector<std::byte> plaintext) -> std::pair<error, encryption_result> = 0;
 };
 } // namespace couchbase::crypto

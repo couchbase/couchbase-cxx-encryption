@@ -16,6 +16,7 @@
 
 namespace couchbase::crypto
 {
+#ifndef COUCHBASE_CXX_ENCRYPTION_DOXYGEN
 namespace internal
 {
 auto
@@ -27,7 +28,18 @@ auto
 decrypt(const codec::binary& encrypted, const std::shared_ptr<manager>& crypto_manager)
   -> std::pair<error, codec::binary>;
 } // namespace internal
+#endif
 
+/**
+ * An implementation of a transcoder that supports Field Level Encryption (FLE). It accepts a
+ * crypto manager as a parameter when encoding and decoding documents, and is used to encrypt or
+ * decrypt fields.
+ *
+ * @tparam Serializer The serializer to use for encoding and decoding documents.
+ *
+ * @since 1.0.0
+ * @committed
+ */
 template<typename Serializer>
 class transcoder
 {

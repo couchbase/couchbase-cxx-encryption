@@ -20,15 +20,51 @@
 
 namespace couchbase::crypto
 {
+/**
+ * Provider for AES-256 in CBC mode authenticated with HMAC SHA-512. Provides a way to create
+ * encrypters and decrypters.
+ *
+ * Requires a 64 byte key.
+ *
+ * The algorithm is formally described in <a
+ * href="https://tools.ietf.org/html/draft-mcgrew-aead-aes-cbc-hmac-sha2-05"> Authenticated
+ * Encryption with AES-CBC and HMAC-SHA</a>.
+ */
 class aead_aes_256_cbc_hmac_sha512_provider
 {
 public:
   static inline const std::string algorithm_name{ "AEAD_AES_256_CBC_HMAC_SHA512" };
 
+  /**
+   * Constructs an instance of an AEAD-AES-256-CBC-HMAC-SHA512 provider, with the given keyring.
+   *
+   * @param keyring the keyring for obtaining data encryption keys
+   *
+   * @since 1.0.0
+   * @committed
+   */
   explicit aead_aes_256_cbc_hmac_sha512_provider(std::shared_ptr<keyring> keyring);
 
+  /**
+   * Creates a new encrypter for the encryption key with the given ID.
+   *
+   * @param key_id the id of the key to use for encryption
+   * @return the AEAD-AES-256-CBC-HMAC-SHA512 encrypter
+   *
+   * @since 1.0.0
+   * @committed
+   */
   [[nodiscard]] auto encrypter_for_key(const std::string& key_id) const
     -> std::shared_ptr<encrypter>;
+
+  /**
+   * Creates a new decrypter for this algorithm.
+   *
+   * @return the AEAD-AES-256-CBC-HMAC-SHA512 decrypter
+   *
+   * @since 1.0.0
+   * @committed
+   */
   [[nodiscard]] auto decrypter() const -> std::shared_ptr<decrypter>;
 
 private:

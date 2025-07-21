@@ -17,6 +17,12 @@
 
 namespace couchbase::crypto
 {
+/**
+ * A decrypter is responsible for performing decryption for a specific algorithm.
+ *
+ * @since 1.0.0
+ * @committed
+ */
 class decrypter
 {
 public:
@@ -27,8 +33,26 @@ public:
   auto operator=(decrypter&& other) -> decrypter& = default;
   virtual ~decrypter() = default;
 
+  /**
+   * Decrypts the given encrypted message.
+   *
+   * @param encrypted the encrypted message to decrypt
+   * @return the decrypted message, or an error if decryption failed
+   *
+   * @since 1.0.0
+   * @committed
+   */
   [[nodiscard]] virtual auto decrypt(encryption_result encrypted)
     -> std::pair<error, std::vector<std::byte>> = 0;
+
+  /**
+   * Returns the name of the encryption algorithm used by this decrypter.
+   *
+   * @return the name of the algorithm
+   *
+   * @since 1.0.0
+   * @committed
+   */
   [[nodiscard]] virtual auto algorithm() const -> const std::string& = 0;
 };
 } // namespace couchbase::crypto

@@ -11,20 +11,30 @@
 #include <couchbase/codec/transcoder_traits.hxx>
 #include <couchbase_encryption/transcoder.hxx>
 
+#ifndef COUCHBASE_CXX_ENCRYPTION_DOXYGEN
 namespace couchbase
 {
 namespace codec
 {
 class tao_json_serializer;
 } // namespace codec
+#endif
 
 namespace crypto
 {
+
+/**
+ * A couchbase::crypto::transcoder that uses the couchbase::codec::tao_json_serializer for encoding
+ * and decoding documents.
+ *
+ * @since 1.0.0
+ * @committed
+ */
 using default_transcoder = transcoder<codec::tao_json_serializer>;
 } // namespace crypto
 } // namespace couchbase
 
-#ifndef COUCHBASE_CXX_CLIENT_DOXYGEN
+#ifndef COUCHBASE_CXX_ENCRYPTION_DOXYGEN
 template<>
 struct couchbase::codec::is_transcoder<couchbase::crypto::default_transcoder>
   : public std::true_type {

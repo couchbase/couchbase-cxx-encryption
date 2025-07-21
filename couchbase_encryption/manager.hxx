@@ -31,13 +31,66 @@ public:
   auto operator=(manager&& other) -> manager& = default;
   virtual ~manager() = default;
 
+  /**
+   * Encrypts the given data, using the encrypter associated with the given alias, or the default
+   * encrypter if no alias is given.
+   *
+   * @param plaintext the message to encrypt
+   * @param encrypter_alias the alias of the encrypter to use, or std::nullopt to use the default
+   * @return the encrypted node containing the encrypted message and metadata, or an error if
+   * encryption failed
+   *
+   * @since 1.0.0
+   * @committed
+   */
   virtual auto encrypt(std::vector<std::byte> plaintext,
                        const std::optional<std::string>& encrypter_alias)
     -> std::pair<error, std::map<std::string, std::string>> = 0;
+
+  /**
+   * Selects an appropriate decrypter based on the contents of the encrypted node and uses it to
+   * decrypt the data.
+   *
+   * @param encrypted_node the encrypted node containing the encrypted message and metadata
+   * @return the plaintext message if decryption was successful, or an error if it failed
+   *
+   * @since 1.0.0
+   * @committed
+   */
   virtual auto decrypt(std::map<std::string, std::string> encrypted_node)
     -> std::pair<error, std::vector<std::byte>> = 0;
-  virtual auto mangle(std::string) -> std::string = 0;
-  virtual auto demangle(std::string) -> std::string = 0;
-  virtual auto is_mangled(const std::string&) -> bool = 0;
+
+  /**
+   * Transforms the given field name to indicate its value is encrypted.
+   *
+   * @param field_name the name of the field to mangle
+   * @return the mangled field name
+   *
+   * @since 1.0.0
+   * @committed
+   */
+  virtual auto mangle(std::string field_name) -> std::string = 0;
+
+  /**
+   * Reverses the mangling of a field name, returning it to its original form.
+   *
+   * @param field_name the mangled field name
+   * @return the original field name
+   *
+   * @since 1.0.0
+   * @committed
+   */
+  virtual auto demangle(std::string field_name) -> std::string = 0;
+
+  /**
+   * Checks if the given field name is mangled, indicating it is encrypted.
+   *
+   * @param field_name the name of the field to check
+   * @return true iff the field name has been mangled
+   *
+   * @since 1.0.0
+   * @committed
+   */
+  virtual auto is_mangled(const std::string& field_name) -> bool = 0;
 };
 } // namespace couchbase::crypto

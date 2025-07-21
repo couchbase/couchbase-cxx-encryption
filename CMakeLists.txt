@@ -82,3 +82,8 @@ option(COUCHBASE_CXX_ENCRYPTION_BUILD_TESTS "Build test programs" ON)
 if(COUCHBASE_CXX_ENCRYPTION_BUILD_TESTS)
     include(cmake/Testing.cmake)
 endif()
+
+option(COUCHBASE_CXX_ENCRYPTION_BUILD_DOCS "Build API documentation" ON)
+if(COUCHBASE_CXX_ENCRYPTION_BUILD_DOCS)
+    include(cmake/Documentation.cmake)
+endif()

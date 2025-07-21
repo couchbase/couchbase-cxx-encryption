@@ -13,6 +13,14 @@
 
 namespace couchbase::crypto
 {
+/**
+ * A collection of keys that can be used for Field Level Encryption (FLE). It is given to the
+ * couchbase::crypto::manager to allow it to retrieve the keys needed for encryption and decryption
+ * based on the key ID.
+ *
+ * @since 1.0.0
+ * @committed
+ */
 class keyring
 {
 public:
@@ -23,6 +31,15 @@ public:
   auto operator=(keyring&& other) -> keyring& = default;
   virtual ~keyring() = default;
 
+  /**
+   * Retrieves a key from the keyring by its ID.
+   *
+   * @param key_id the ID of the key to retrieve
+   * @return the key if found, or an error if retrieving the key failed
+   *
+   * @since 1.0.0
+   * @committed
+   */
   [[nodiscard]] virtual auto get(const std::string& key_id) const -> std::pair<error, key> = 0;
 };
 } // namespace couchbase::crypto

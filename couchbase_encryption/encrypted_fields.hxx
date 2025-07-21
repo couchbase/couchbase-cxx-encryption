@@ -14,8 +14,29 @@
 
 namespace couchbase::crypto
 {
+/**
+ * Represents an individual field that should be encrypted in a document.
+ */
 struct encrypted_field {
+  /**
+   * The path to the field that should be encrypted, as it appears in the serialized document
+   * e.g. {"address", "street"}.
+   *
+   * @since 1.0.0
+   * @committed
+   */
   std::vector<std::string> field_path;
+
+  /**
+   * The alias of the encrypter that should be used to encrypt the field.
+   *
+   * The encrypter_alias refers to the alias a couchbase::crypto::encrypter was registered with
+   * the couchbase::crypto::manager. If no encrypter alias is specified, the default encrypter is
+   * used.
+   *
+   * @since 1.0.0
+   * @committed
+   */
   std::optional<std::string> encrypter_alias{};
 
   auto operator==(const encrypted_field& other) const -> bool
