@@ -6,8 +6,8 @@
  * v7 which may be found at https://www.couchbase.com/ESLA01162020.
  */
 
-#include <couchbase_encryption/insecure_keyring.hxx>
 #include <couchbase/error_codes.hxx>
+#include <couchbase_encryption/insecure_keyring.hxx>
 
 namespace couchbase::crypto
 {

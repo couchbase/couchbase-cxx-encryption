@@ -10,5 +10,3 @@
 
 #include "test_helper.hxx"
 #include "utils/integration_test_guard.hxx"
-
-#include <couchbase_encryption/impl/utils/json.hxx>

@@ -18,14 +18,14 @@ set(CMAKE_CXX_STANDARD 17)
 include(cmake/VersionInfo.cmake)
 
 set(couchbase_cxx_encryption_FILES
-        couchbase_encryption/impl/utils/base64.cc
-        couchbase_encryption/impl/utils/json.cxx
-        couchbase_encryption/impl/aead_aes_256_cbc_hmac_sha512_provider.cxx
-        couchbase_encryption/impl/default_manager.cxx
-        couchbase_encryption/impl/encryption_result.cxx
-        couchbase_encryption/impl/insecure_keyring.cxx
-        couchbase_encryption/impl/key.cxx
-        couchbase_encryption/impl/transcoder.cxx
+        src/utils/base64.cc
+        src/utils/json.cxx
+        src/aead_aes_256_cbc_hmac_sha512_provider.cxx
+        src/default_manager.cxx
+        src/encryption_result.cxx
+        src/insecure_keyring.cxx
+        src/key.cxx
+        src/transcoder.cxx
 )
 
 add_library(couchbase_cxx_encryption STATIC ${couchbase_cxx_encryption_FILES})

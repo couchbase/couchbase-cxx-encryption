@@ -8,8 +8,8 @@
 
 #include <couchbase_encryption/aead_aes_256_cbc_hmac_sha512_provider.hxx>
 
-#include <couchbase/error_codes.hxx>
 #include <couchbase/crypto/internal.hxx>
+#include <couchbase/error_codes.hxx>
 
 #include "utils/base64.h"
 
@@ -60,8 +60,8 @@ aead_aes_256_cbc_hmac_sha512_encrypter::encrypt(std::vector<std::byte> plaintext
     return { iv_err, {} };
   }
 
-  auto [enc_err, ciphertext] =
-    couchbase::crypto::internal::aead_aes_256_cbc_hmac_sha512::encrypt(key.bytes(), iv, plaintext, {});
+  auto [enc_err, ciphertext] = couchbase::crypto::internal::aead_aes_256_cbc_hmac_sha512::encrypt(
+    key.bytes(), iv, plaintext, {});
   if (enc_err) {
     return { enc_err, {} };
   }

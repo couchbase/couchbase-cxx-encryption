@@ -19,8 +19,8 @@
 
 #include <tao/json/forward.hpp>
 
-#include <vector>
 #include <string>
+#include <vector>
 
 namespace couchbase::crypto::impl::utils::json
 {
