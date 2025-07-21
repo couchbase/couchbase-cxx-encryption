@@ -9,7 +9,6 @@
 #pragma once
 
 #include <couchbase_encryption/encrypted_fields.hxx>
-#include <couchbase_encryption/manager.hxx>
 
 #include <optional>
 #include <string>

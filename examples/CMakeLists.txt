@@ -12,4 +12,6 @@ macro(define_example name)
     )
 endmacro()
 
-define_example(minimal)
+define_example(crypto_document)
+define_example(custom_transcoder)
+define_example(user_defined_type)
