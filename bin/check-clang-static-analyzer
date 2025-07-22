@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+
+# Copyright (c) 2025 Couchbase, Inc.
+#
+# Use of this software is subject to the Couchbase Inc. Enterprise Subscription License Agreement
+# v7 which may be found at https://www.couchbase.com/ESLA01162020.
+
+PROJECT_ROOT="$( cd "$(dirname "$0"/..)" >/dev/null 2>&1 ; pwd -P )"
+
+CB_DEFAULT_CMAKE=$(which cmake)
+CB_DEFAULT_CC=$(which clang)
+CB_DEFAULT_CXX=$(which clang++)
+CB_DEFAULT_SCAN_BUILD=$(which scan-build)
+
+if [[ "$(uname)" == "Darwin" ]]
+then
+    CB_LLVM_PREFIX=$(brew --prefix llvm 2>/dev/null)
+    if [ -d ${CB_LLVM_PREFIX} ]
+    then
+        CB_DEFAULT_CC="${CB_LLVM_PREFIX}/bin/clang"
+        CB_DEFAULT_CXX="${CB_LLVM_PREFIX}/bin/clang++"
+        CB_DEFAULT_SCAN_BUILD="${CB_LLVM_PREFIX}/bin/scan-build"
+    fi
+fi
+
+CB_CMAKE=${CB_CMAKE:-${CB_DEFAULT_CMAKE}}
+CB_CC=${CB_CC:-${CB_DEFAULT_CC}}
+CB_CXX=${CB_CXX:-${CB_DEFAULT_CXX}}
+CB_SCAN_BUILD=${CB_SCAN_BUILD:-${CB_DEFAULT_SCAN_BUILD}}
+CB_NUMBER_OF_JOBS=${CB_NUMBER_OF_JOBS:-2}
+
+echo "CB_CC=${CB_CC}"
+echo "CB_CXX=${CB_CXX}"
+echo "CB_SCAN_BUILD=${CB_SCAN_BUILD}"
+echo "CB_CMAKE=${CB_CMAKE}"
+
+set -exuo pipefail
+
+${CB_CXX} --version
+${CB_CMAKE} --version
+ls -l ${CB_SCAN_BUILD}
+
+BUILD_DIR="${PROJECT_ROOT}/cmake-build-clang-analyzer"
+REPORT_DIR="${PROJECT_ROOT}/cmake-build-report"
+
+rm -rf "${BUILD_DIR}" "${REPORT_DIR}"
+mkdir -p "${BUILD_DIR}"
+cd "${BUILD_DIR}"
+
+SCAN_BUILD_ARGS="--exclude third_party --exclude _deps -o ${REPORT_DIR} --use-analyzer=${CB_CC} --use-c++=${CB_CXX} --use-cc=${CB_CC} --status-bugs"
+
+${CB_SCAN_BUILD} ${SCAN_BUILD_ARGS} ${CB_CMAKE} -DENABLE_CACHE=OFF  ..
+set +e
+${CB_SCAN_BUILD} ${SCAN_BUILD_ARGS} ${CB_CMAKE} --build . --parallel ${CB_NUMBER_OF_JOBS} --verbose
+STATUS=$?
+set -e
+
+tar zcvf ${REPORT_DIR}.tar.gz -C ${REPORT_DIR} .
+exit ${STATUS}
