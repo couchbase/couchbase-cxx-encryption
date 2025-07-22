@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+
+# Copyright (c) 2025 Couchbase, Inc.
+#
+# Use of this software is subject to the Couchbase Inc. Enterprise Subscription License Agreement
+# v7 which may be found at https://www.couchbase.com/ESLA01162020.
+
+PROJECT_ROOT="$( cd "$(dirname "$0"/..)" >/dev/null 2>&1 ; pwd -P )"
+
+CB_CLANG_FORMAT=${CB_CLANG_FORMAT:-$(which clang-format)}
+if [[ ! -x ${CB_CLANG_FORMAT} ]]
+then
+    echo "ERROR: clang-format must be executable, '${CB_CLANG_FORMAT}' is not"
+    exit 1
+fi
+
+CB_GIT_CLANG_FORMAT=${CB_GIT_CLANG_FORMAT:-$(which git-clang-format)}
+if [[ ! -x ${CB_GIT_CLANG_FORMAT} ]]
+then
+    echo "ERROR: git-clang-format must be executable, '${CB_GIT_CLANG_FORMAT}' is not"
+    exit 1
+fi
+
+IFS=$'\n\t'
+
+cd "${PROJECT_ROOT}"
+
+${CB_CLANG_FORMAT} --version
+format_diff="$(${CB_GIT_CLANG_FORMAT} --binary ${CB_CLANG_FORMAT} --diff --commit HEAD^)"
+
+if [ "$format_diff" == "clang-format did not modify any files" ] || \
+   [ "$format_diff" == "no modified files to format" ]
+then
+    echo "clang-format did not suggest any changes"
+    exit 0
+else
+    echo "clang-format suggested the following changes:"
+    echo ""
+    echo "$format_diff"
+    exit 1
+fi

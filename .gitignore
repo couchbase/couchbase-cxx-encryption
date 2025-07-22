@@ -1,2 +1,7 @@
 /build/
+/out/
 /cmake-build-*/
+/cmake-build-report.tar.gz
+/CMakeSettings.json
+/CppProperties.json
+/Testing
