@@ -30,11 +30,11 @@ struct person {
 
   struct address {
     std::string number{};
-    street street{};
+    street str{};
 
     auto operator==(const address& other) const -> bool
     {
-      return number == other.number && street == other.street;
+      return number == other.number && str == other.str;
     }
   };
 
@@ -61,13 +61,13 @@ struct person {
   std::string first_name{};
   std::string last_name{};
   std::string password{};
-  address address{};
+  address addr{};
   pet pet{};
 
   auto operator==(const person& other) const -> bool
   {
     return first_name == other.first_name && last_name == other.last_name &&
-           password == other.password && address == other.address && pet == other.pet;
+           password == other.password && addr == other.addr && pet == other.pet;
   }
 
   inline static const std::vector<couchbase::crypto::encrypted_field> encrypted_fields{
@@ -103,10 +103,9 @@ struct tao::json::traits<person> {
           { "last_name", p.last_name },
           { "password", p.password },
           { "address",
-            { { "number", p.address.number },
+            { { "number", p.addr.number },
               { "street",
-                { { "first", p.address.street.first_line },
-                  { "second", p.address.street.second_line } } } } },
+                { { "first", p.addr.str.first_line }, { "second", p.addr.str.second_line } } } } },
           { "pet", { { "name", p.pet.name }, { "attributes", tao::json::empty_object } } } };
 
     for (const auto& [attr_key, attr] : p.pet.attributes) {
@@ -122,11 +121,9 @@ struct tao::json::traits<person> {
     result.first_name = object.at("first_name").template as<std::string>();
     result.last_name = object.at("last_name").template as<std::string>();
     result.password = object.at("password").template as<std::string>();
-    result.address.number = object.at("address").at("number").template as<std::string>();
-    result.address.street = {
-      object.at("address").at("street").at("first").template as<std::string>(),
-      object.at("address").at("street").at("second").template as<std::string>()
-    };
+    result.addr.number = object.at("address").at("number").template as<std::string>();
+    result.addr.str = { object.at("address").at("street").at("first").template as<std::string>(),
+                        object.at("address").at("street").at("second").template as<std::string>() };
     result.pet.name = object.at("pet").at("name").template as<std::string>();
     for (const auto& [attr_key, attr_value] : object.at("pet").at("attributes").get_object()) {
       result.pet.attributes[attr_key] = { attr_value.at("action").template as<std::string>(),

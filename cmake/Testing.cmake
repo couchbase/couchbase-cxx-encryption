@@ -43,15 +43,15 @@ macro(integration_test name)
             "SKIP"
             LABELS
             "integration")
-    set_property(GLOBAL APPEND PROPERTY COUCHBASE_INTEGRATION_TESTS "test_integration_${name}")
+    set_property(GLOBAL APPEND PROPERTY COUCHBASE_ENCRYPTION_INTEGRATION_TESTS "test_integration_${name}")
 endmacro()
 
 define_property(
         GLOBAL
-        PROPERTY COUCHBASE_UNIT_TESTS
+        PROPERTY COUCHBASE_ENCRYPTION_UNIT_TESTS
         BRIEF_DOCS "list of unit tests"
         FULL_DOCS "list of unit tests targets")
-set_property(GLOBAL PROPERTY COUCHBASE_UNIT_TESTS "")
+set_property(GLOBAL PROPERTY COUCHBASE_ENCRYPTION_UNIT_TESTS "")
 macro(unit_test name)
     add_executable(test_unit_${name} "${PROJECT_SOURCE_DIR}/test/test_unit_${name}.cxx")
     target_include_directories(test_unit_${name} PRIVATE
@@ -77,7 +77,7 @@ macro(unit_test name)
             "SKIP"
             LABELS
             "unit")
-    set_property(GLOBAL APPEND PROPERTY COUCHBASE_UNIT_TESTS "test_unit_${name}")
+    set_property(GLOBAL APPEND PROPERTY COUCHBASE_ENCRYPTION_UNIT_TESTS "test_unit_${name}")
 endmacro()
 
 add_subdirectory(${PROJECT_SOURCE_DIR}/test)
@@ -86,4 +86,5 @@ get_property(integration_targets GLOBAL PROPERTY COUCHBASE_ENCRYPTION_INTEGRATIO
 add_custom_target(build_integration_tests DEPENDS ${integration_targets})
 
 get_property(unit_targets GLOBAL PROPERTY COUCHBASE_ENCRYPTION_UNIT_TESTS)
+message("Unit tests: ${unit_targets}")
 add_custom_target(build_unit_tests DEPENDS ${unit_targets})

@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+
+# Copyright (c) 2025 Couchbase, Inc.
+#
+# Use of this software is subject to the Couchbase Inc. Enterprise Subscription License Agreement
+# v7 which may be found at https://www.couchbase.com/ESLA01162020.
+
+PROJECT_ROOT="$( cd "$(dirname "$0"/..)" >/dev/null 2>&1 ; pwd -P )"
+
+CB_DEFAULT_CC=cc
+CB_DEFAULT_CXX=c++
+CB_CLANG=${CB_CLANG:-clang}
+CB_CLANGXX=${CB_CLANGXX:-clang++}
+
+CB_CMAKE=${CB_CMAKE:-$(which cmake)}
+CB_CC=${CB_CC:-$(which ${CB_DEFAULT_CC})}
+CB_CXX=${CB_CXX:-$(which ${CB_DEFAULT_CXX})}
+CB_NUMBER_OF_JOBS=${CB_NUMBER_OF_JOBS:-1}
+CB_CMAKE_BUILD_TYPE=${CB_CMAKE_BUILD_TYPE:-Debug}
+CB_CACHE_OPTION=${CB_CACHE_OPTION:-ccache}
+CB_TEST_SUITE=${CB_TEST_SUITE:-}
+CB_BORINGSSL=${CB_BORINGSSL:-ON}
+
+echo "CB_CMAKE=${CB_CMAKE}"
+echo "CB_CC=${CB_CC}"
+echo "CB_CXX=${CB_CXX}"
+echo "CB_NUMBER_OF_JOBS=${CB_NUMBER_OF_JOBS}"
+echo "CB_CMAKE_BUILD_TYPE=${CB_CMAKE_BUILD_TYPE}"
+echo "CB_CACHE_OPTION=${CB_CACHE_OPTION}"
+echo "CB_TEST_SUITE=${CB_TEST_SUITE}"
+echo "CB_BORINGSSL=${CB_BORINGSSL}"
+
+set -exuo pipefail
+
+BUILD_DIR="${PROJECT_ROOT}/cmake-build-tests"
+
+rm -rf "${BUILD_DIR}"
+mkdir -p "${BUILD_DIR}"
+cd "${BUILD_DIR}"
+
+CB_CMAKE_BUILD_EXTRAS=
+if [ "x${CB_TEST_SUITE}" != "x" ] ; then
+    CB_CMAKE_BUILD_EXTRAS="--target build_${CB_TEST_SUITE}_tests"
+fi
+
+${CB_CMAKE}  \
+    -DCMAKE_BUILD_TYPE=${CB_CMAKE_BUILD_TYPE} \
+    -DCMAKE_C_COMPILER="${CB_CC}" \
+    -DCMAKE_CXX_COMPILER="${CB_CXX}" \
+    -DCOUCHBASE_CXX_ENCRYPTION_BUILD_DOCS=OFF \
+    -DCOUCHBASE_CXX_ENCRYPTION_BUILD_TESTS=ON \
+    -DCOUCHBASE_CXX_CLIENT_STATIC_BORINGSSL=${CB_BORINGSSL} \
+    -DCACHE_OPTION="${CB_CACHE_OPTION}" \
+    -B "${BUILD_DIR}" \
+    -S "${PROJECT_ROOT}"
+
+${CB_CMAKE} --build "${BUILD_DIR}" --parallel ${CB_NUMBER_OF_JOBS} --verbose ${CB_CMAKE_BUILD_EXTRAS}
