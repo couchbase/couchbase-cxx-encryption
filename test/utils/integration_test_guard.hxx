@@ -24,7 +24,8 @@ class integration_test_guard
 public:
   integration_test_guard();
   explicit integration_test_guard(const couchbase::cluster_options& opts);
-  explicit integration_test_guard(const std::shared_ptr<couchbase::crypto::manager>& crypto_manager);
+  explicit integration_test_guard(
+    const std::shared_ptr<couchbase::crypto::manager>& crypto_manager);
   ~integration_test_guard();
 
   [[nodiscard]] auto cluster_version() const -> server_version;

@@ -19,22 +19,22 @@ auto
 level_from_str(const std::string& str) -> couchbase::logger::log_level
 {
   switch (spdlog::level::from_str(str)) {
-  case spdlog::level::level_enum::trace:
-    return couchbase::logger::log_level::trace;
-  case spdlog::level::level_enum::debug:
-    return couchbase::logger::log_level::debug;
-  case spdlog::level::level_enum::info:
-    return couchbase::logger::log_level::info;
-  case spdlog::level::level_enum::warn:
-    return couchbase::logger::log_level::warn;
-  case spdlog::level::level_enum::err:
-    return couchbase::logger::log_level::error;
-  case spdlog::level::level_enum::critical:
-    return couchbase::logger::log_level::critical;
-  case spdlog::level::level_enum::off:
-    return couchbase::logger::log_level::off;
-  default:
-    break;
+    case spdlog::level::level_enum::trace:
+      return couchbase::logger::log_level::trace;
+    case spdlog::level::level_enum::debug:
+      return couchbase::logger::log_level::debug;
+    case spdlog::level::level_enum::info:
+      return couchbase::logger::log_level::info;
+    case spdlog::level::level_enum::warn:
+      return couchbase::logger::log_level::warn;
+    case spdlog::level::level_enum::err:
+      return couchbase::logger::log_level::error;
+    case spdlog::level::level_enum::critical:
+      return couchbase::logger::log_level::critical;
+    case spdlog::level::level_enum::off:
+      return couchbase::logger::log_level::off;
+    default:
+      break;
   }
   // return highest level if we don't understand
   return couchbase::logger::log_level::trace;

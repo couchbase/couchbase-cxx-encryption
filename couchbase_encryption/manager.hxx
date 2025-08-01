@@ -8,11 +8,11 @@
 
 #pragma once
 
+#include <couchbase/error.hxx>
 #include <couchbase_encryption/decrypter.hxx>
 #include <couchbase_encryption/encrypter.hxx>
 #include <couchbase_encryption/encryption_result.hxx>
 #include <couchbase_encryption/keyring.hxx>
-#include <couchbase/error.hxx>
 
 #include <map>
 #include <memory>
