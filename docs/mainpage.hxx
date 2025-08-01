@@ -22,11 +22,14 @@
  *
  * The following examples show different ways the library can be used to encrypt document fields:
  *
- * * @ref user_defined_type.cxx - example of how to specify fields that should be encrypted in a user-defined type.
+ * * @ref user_defined_type.cxx - example of how to specify fields that should be encrypted in a
+ * user-defined type.
  *
- * * @ref custom_transcoder.cxx - example of performing encryption and decryption of documents using a custom transcoder.
+ * * @ref custom_transcoder.cxx - example of performing encryption and decryption of documents using
+ * a custom transcoder.
  *
- * * @ref crypto_document.cxx - example of how to specify fields that should be encrypted on any document type on an ad hoc basis.
+ * * @ref crypto_document.cxx - example of how to specify fields that should be encrypted on any
+ * document type on an ad hoc basis.
  *
  * @example user_defined_type.cxx
  * Encryption for a user-defined type.

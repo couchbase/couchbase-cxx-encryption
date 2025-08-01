@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include <couchbase_encryption/manager.hxx>
 #include <couchbase/error.hxx>
+#include <couchbase_encryption/manager.hxx>
 
 namespace couchbase::crypto
 {

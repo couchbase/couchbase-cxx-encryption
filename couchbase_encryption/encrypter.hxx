@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include <couchbase_encryption/encryption_result.hxx>
 #include <couchbase/error.hxx>
+#include <couchbase_encryption/encryption_result.hxx>
 
 #include <utility>
 #include <vector>

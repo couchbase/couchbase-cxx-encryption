@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include <couchbase_encryption/key.hxx>
 #include <couchbase/error.hxx>
+#include <couchbase_encryption/key.hxx>
 
 namespace couchbase::crypto
 {

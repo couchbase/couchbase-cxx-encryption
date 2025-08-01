@@ -21,11 +21,11 @@ to_string(const std::vector<std::byte>& input) -> std::string
 auto
 make_bytes(std::vector<unsigned char> v) -> std::vector<std::byte>
 {
-    std::vector<std::byte> out{ v.size() };
-    std::transform(v.begin(), v.end(), out.begin(), [](int c) {
-      return static_cast<std::byte>(c);
-    });
-    return out;
+  std::vector<std::byte> out{ v.size() };
+  std::transform(v.begin(), v.end(), out.begin(), [](int c) {
+    return static_cast<std::byte>(c);
+  });
+  return out;
 }
 
 } // namespace test::utils

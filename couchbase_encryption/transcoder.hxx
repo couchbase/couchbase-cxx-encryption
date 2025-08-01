@@ -10,9 +10,9 @@
 
 #include <couchbase/codec/codec_flags.hxx>
 #include <couchbase/codec/encoded_value.hxx>
+#include <couchbase/error_codes.hxx>
 #include <couchbase_encryption/document.hxx>
 #include <couchbase_encryption/manager.hxx>
-#include <couchbase/error_codes.hxx>
 
 namespace couchbase::crypto
 {
