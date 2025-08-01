@@ -1,4 +1,5 @@
 UseColor: true
+HeaderFilterRegex: 'include/.*'
 WarningsAsErrors: '*'
 Checks: |-
   *,
