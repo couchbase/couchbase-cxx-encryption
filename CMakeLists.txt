@@ -40,7 +40,7 @@ if (NOT couchbase_cxx_client_FOUND)
             NAME
             couchbase_cxx_client
             GIT_TAG
-            6b9cadd7a72bb78c809cffab338957e3114138fd
+            b80886d6b4a75c604d26a4b54252a1e78db42297
             VERSION
             1.2.0
             GITHUB_REPOSITORY
@@ -55,7 +55,7 @@ set(CXX_SDK_TARGET couchbase_cxx_client::couchbase_cxx_client)
 
 target_include_directories(couchbase_cxx_encryption
         PUBLIC
-        ${PROJECT_SOURCE_DIR}
+        ${PROJECT_SOURCE_DIR}/include
         ${PROJECT_BINARY_DIR}/generated
 )
 
