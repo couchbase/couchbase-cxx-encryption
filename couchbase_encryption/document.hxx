@@ -123,12 +123,12 @@ public:
       fields_to_encrypt = DocumentType::encrypted_fields;
     }
 
-    return document{ std::move(doc), std::move(fields_to_encrypt) };
+    return document{ std::forward<DocumentType>(doc), std::move(fields_to_encrypt) };
   }
 
 private:
-  document(DocumentType content, std::vector<encrypted_field> encrypted_fields)
-    : content_{ std::move(content) }
+  document(DocumentType doc, std::vector<encrypted_field> encrypted_fields)
+    : content_(std::forward<DocumentType>(doc))
     , encrypted_fields_{ std::move(encrypted_fields) }
   {
   }

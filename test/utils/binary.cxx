@@ -8,6 +8,8 @@
 
 #include "binary.hxx"
 
+#include <algorithm>
+
 namespace test::utils
 {
 [[nodiscard]] auto

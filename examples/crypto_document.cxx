@@ -20,9 +20,9 @@
 
 #include <couchbase/fmt/error.hxx>
 
+#include <tao/json/basic_value.hpp>
 #include <tao/json/forward.hpp>
 #include <tao/json/to_string.hpp>
-#include <tao/json/type.hpp>
 
 #include <string>
 
@@ -82,26 +82,27 @@ main() -> int
 
   auto collection = cluster.bucket(bucket_name).scope(scope_name).collection(collection_name);
 
-  const auto document = tao::json::value{ { "first_name", "John" },
-                                          { "last_name", "Doe" },
-                                          { "password", "password123" },
-                                          { "address",
-                                            {
-                                              { "street", "999 Street St." },
-                                              { "city", "Some City" },
-                                              { "state", "ST" },
-                                              { "zip", "12345" },
-                                            } },
-                                          { "phone", "12345678" } };
+  auto document = tao::json::value::object({ { "first_name", "John" },
+                                             { "last_name", "Doe" },
+                                             { "password", "password123" },
+                                             { "address",
+                                               tao::json::value::object({
+                                                 { "street", "999 Street St." },
+                                                 { "city", "Some City" },
+                                                 { "state", "ST" },
+                                                 { "zip", "12345" },
+                                               }) },
+                                             { "phone", "12345678" } });
 
   /*
     Wrap the document in a crypto document to specify which fields should be encrypted.
   */
-  const auto crypto_document = couchbase::crypto::document<tao::json::value>::from(document)
-                                 .with_encrypted_field({ "password" })
-                                 .with_encrypted_field({ "address", "street" })
-                                 .with_encrypted_field({ "address", "zip" })
-                                 .with_encrypted_field({ "phone" });
+  const auto crypto_document =
+    couchbase::crypto::document<tao::json::value>::from(std::move(document))
+      .with_encrypted_field({ "password" })
+      .with_encrypted_field({ "address", "street" })
+      .with_encrypted_field({ "address", "zip" })
+      .with_encrypted_field({ "phone" });
 
   /*
    Upserting the document with the crypto transcoder, will encrypt the fields specified, using the

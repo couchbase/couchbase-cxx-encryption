@@ -33,10 +33,7 @@ add_library(couchbase_cxx_encryption STATIC ${couchbase_cxx_encryption_FILES})
 set_target_properties(couchbase_cxx_encryption PROPERTIES LINKER_LANGUAGE CXX)
 
 find_package(couchbase_cxx_client)
-if (couchbase_cxx_client_FOUND)
-    find_package(taocpp-json REQUIRED)
-    find_package(spdlog REQUIRED)
-else()
+if (NOT couchbase_cxx_client_FOUND)
     include(cmake/CPM.cmake)
 
     cpmaddpackage(
@@ -60,14 +57,11 @@ target_include_directories(couchbase_cxx_encryption
         PUBLIC
         ${PROJECT_SOURCE_DIR}
         ${PROJECT_BINARY_DIR}/generated
-        PRIVATE
-        ${couchbase_cxx_client_SOURCE_DIR}
 )
 
 target_link_libraries(couchbase_cxx_encryption
-        PUBLIC
-        ${CXX_SDK_TARGET}
         PRIVATE
+        ${CXX_SDK_TARGET}
         Microsoft.GSL::GSL
         spdlog::spdlog
         taocpp::json

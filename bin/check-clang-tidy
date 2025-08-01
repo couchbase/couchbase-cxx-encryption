@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+# Copyright (c) 2025 Couchbase, Inc.
+#
+# Use of this software is subject to the Couchbase Inc. Enterprise Subscription License Agreement
+# v7 which may be found at https://www.couchbase.com/ESLA01162020.
+
+PROJECT_ROOT="$( cd "$(dirname "$0"/..)" >/dev/null 2>&1 ; pwd -P )"
+
+CB_CMAKE=${CB_CMAKE:-$(which cmake)}
+CB_CC=${CB_CC:-$(which clang)}
+CB_CXX=${CB_CXX:-$(which clang++)}
+CB_NUMBER_OF_JOBS=${CB_NUMBER_OF_JOBS:-2}
+CB_CMAKE_EXTRAS=${CB_CMAKE_EXTRAS:-}
+
+echo "CB_CC=${CB_CC}"
+echo "CB_CXX=${CB_CXX}"
+echo "CB_CMAKE=${CB_CMAKE}"
+
+BUILD_DIR="${PROJECT_ROOT}/cmake-build-clang-tidy"
+
+set -exuo pipefail
+
+rm -rf "${BUILD_DIR}"
+mkdir -p "${BUILD_DIR}"
+cd "${BUILD_DIR}"
+
+${CB_CMAKE} -DENABLE_CLANG_TIDY=ON -DCMAKE_C_COMPILER=${CB_CC} -DCMAKE_CXX_COMPILER=${CB_CXX} ${CB_CMAKE_EXTRAS} ..
+set +e
+${CB_CMAKE} --build . --parallel ${CB_NUMBER_OF_JOBS} --verbose
+STATUS=$?
+set -e
+
+exit ${STATUS}

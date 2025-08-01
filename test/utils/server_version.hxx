@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <cstdlib>
+#include <cstdint>
 #include <string>
 
 namespace test::utils
