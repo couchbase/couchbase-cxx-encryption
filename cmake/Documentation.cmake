@@ -11,11 +11,11 @@ if(DOXYGEN_FOUND AND DOT)
     file(
             GLOB_RECURSE
             COUCHBASE_CXX_ENCRYPTION_PUBLIC_HEADERS
-            ${PROJECT_SOURCE_DIR}/couchbase_encryption/*.hxx
+            ${PROJECT_SOURCE_DIR}/include/couchbase_encryption/*.hxx
             ${PROJECT_SOURCE_DIR}/docs/*.hxx
             ${PROJECT_SOURCE_DIR}/docs/*.md)
 
-    set(DOXYGEN_INPUT_DIR ${PROJECT_SOURCE_DIR}/couchbase_encryption)
+    set(DOXYGEN_INPUT_DIR ${PROJECT_SOURCE_DIR}/include/couchbase_encryption)
     set(DOXYGEN_OUTPUT_DIR ${PROJECT_BINARY_DIR}/couchbase-cxx-encryption-${COUCHBASE_CXX_ENCRYPTION_SEMVER})
     set(DOXYGEN_INDEX_FILE ${DOXYGEN_OUTPUT_DIR}/html/index.html)
     set(DOXYGEN_CONFIG_TEMPLATE ${PROJECT_SOURCE_DIR}/docs/Doxyfile.in)

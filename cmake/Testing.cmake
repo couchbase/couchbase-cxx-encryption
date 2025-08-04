@@ -86,5 +86,4 @@ get_property(integration_targets GLOBAL PROPERTY COUCHBASE_ENCRYPTION_INTEGRATIO
 add_custom_target(build_integration_tests DEPENDS ${integration_targets})
 
 get_property(unit_targets GLOBAL PROPERTY COUCHBASE_ENCRYPTION_UNIT_TESTS)
-message("Unit tests: ${unit_targets}")
 add_custom_target(build_unit_tests DEPENDS ${unit_targets})
