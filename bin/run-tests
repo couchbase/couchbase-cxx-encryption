@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+# Copyright (c) 2025 Couchbase, Inc.
+#
+# Use of this software is subject to the Couchbase Inc. Enterprise Subscription License Agreement
+# v7 which may be found at https://www.couchbase.com/ESLA01162020.
+
+PROJECT_ROOT="$( cd "$(dirname "$0")/.." >/dev/null 2>&1 ; pwd -P )"
+CB_CTEST=${CB_CTEST:-$(which ctest)}
+CB_TEST_SUITE=${CB_TEST_SUITE:-}
+
+echo "CB_CTEST=${CB_CTEST}"
+
+set -xu
+
+BUILD_DIR="${PROJECT_ROOT}/cmake-build-tests"
+cd "${BUILD_DIR}"
+
+ulimit -c unlimited
+
+if [ "${CB_TEST_SUITE}" == "integration" ] ; then
+    export TEST_CONNECTION_STRING="${TEST_CONNECTION_STRING//cluster.crt/${PROJECT_ROOT}/cluster.crt}"
+fi
+
+${CB_CTEST} --output-on-failure --label-regex "${CB_TEST_SUITE}" --output-junit results.xml
+STATUS=$?
+exit $STATUS

@@ -1,0 +1,85 @@
+name: tests
+permissions: {}
+
+on:
+  push:
+    branches:
+      - main
+      - release-*
+  pull_request:
+    branches:
+      - main
+      - release-*
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  unit-tests:
+    strategy:
+      fail-fast: false
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Install build environment
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y libssl-dev cmake gcc g++ curl gdb
+      - uses: actions/checkout@v4
+      - name: ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          key: ${{ github.job }}
+      - name: Build tests
+        timeout-minutes: 40
+        env:
+          CB_TEST_SUITE: unit
+        run: ./bin/build-tests
+      - name: Run tests
+        env:
+          CB_TEST_SUITE: unit
+          TEST_LOG_LEVEL: trace
+        timeout-minutes: 40
+        run: ./bin/run-tests
+
+  integration-tests:
+    strategy:
+      fail-fast: false
+      matrix:
+        server:
+          - 7.6.6
+          - 7.2.7
+    runs-on: ubuntu-24.04
+    services:
+      couchbase:
+        image: couchbase:enterprise-${{ matrix.server }}
+        ports:
+          - 8091-8096:8091-8096
+          - 11210:11210
+          - 18091-18096:18091-18096
+          - 11207:11207
+    steps:
+      - name: Install build environment
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y libssl-dev cmake gcc g++ curl gdb
+      - uses: actions/checkout@v4
+      - name: Initialize Couchbase cluster
+        run: ./bin/init-cluster
+      - name: ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          key: ${{ github.job }}
+      - name: Build tests
+        timeout-minutes: 40
+        env:
+          CB_TEST_SUITE: integration
+        run: ./bin/build-tests
+      - name: Run tests
+        timeout-minutes: 40
+        env:
+          CB_TEST_SUITE: integration
+          TEST_SERVER_VERSION: ${{ matrix.server }}
+          TEST_CONNECTION_STRING: couchbase://127.0.0.1
+          TEST_LOG_LEVEL: trace
+        run: ./bin/run-tests
