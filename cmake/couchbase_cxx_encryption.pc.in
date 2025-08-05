@@ -1,0 +1,10 @@
+prefix=@CMAKE_INSTALL_PREFIX@
+exec_prefix=@CMAKE_INSTALL_PREFIX@
+includedir=@CMAKE_INSTALL_PREFIX@/include
+libdir=@CMAKE_INSTALL_PREFIX@/@CMAKE_INSTALL_LIBDIR@
+
+Name: couchbase-cxx-encryption @COUCHBASE_CXX_ENCRYPTION_PKGCONFIG_VERSION@
+Description: Couchbase C++ Field Level Encryption Library (FLE)
+Version: @COUCHBASE_CXX_ENCRYPTION_PKGCONFIG_VERSION@
+Libs: -L${libdir} -lcouchbase_cxx_encryption
+Cflags: -I${includedir}
