@@ -16,6 +16,8 @@ namespace couchbase::crypto
 {
 /**
  * Represents an individual field that should be encrypted in a document.
+ *
+ * @note Only fields of JSON objects can be encrypted.
  */
 struct encrypted_field {
   /**
