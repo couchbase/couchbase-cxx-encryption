@@ -83,8 +83,6 @@ target_include_directories(couchbase_cxx_encryption
         $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/generated_$<CONFIG>>
 )
 
-target_include_directories(couchbase_cxx_encryption PUBLIC)
-
 target_link_libraries(couchbase_cxx_encryption
         PRIVATE
         ${CXX_SDK_TARGET}
