@@ -55,6 +55,8 @@ public:
    * @param encrypter_alias the alias of the encrypter that should be used to encrypt the field
    * @return this document, for chaining purposes
    *
+   * @note Only fields of JSON objects can be encrypted.
+   *
    * @since 1.0.0
    * @committed
    */
